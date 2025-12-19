@@ -1,9 +1,21 @@
 import express from "express";
+import cors from "cors";
 import nodemailer from "nodemailer";
 
 const app = express();
+
+/* =========================
+   CORS (GitHub Pages)
+   ========================= */
+app.use(cors({
+  origin: "https://eliezelapolinaris2017-lab.github.io"
+}));
+
 app.use(express.json());
 
+/* =========================
+   ENDPOINT
+   ========================= */
 app.post("/api/submit", async (req, res) => {
   try {
     const {
@@ -11,7 +23,7 @@ app.post("/api/submit", async (req, res) => {
       email,
       phone,
       service,
-      details = "",
+      details,
       recaptchaToken
     } = req.body;
 
@@ -20,11 +32,13 @@ app.post("/api/submit", async (req, res) => {
     }
 
     if (!recaptchaToken) {
-      return res.status(400).json({ error: "reCAPTCHA requerido" });
+      return res.status(400).json({ error: "reCAPTCHA faltante" });
     }
 
-    // Verificar reCAPTCHA con Google
-    const verify = await fetch(
+    /* =========================
+       Validar reCAPTCHA
+       ========================= */
+    const verifyRes = await fetch(
       "https://www.google.com/recaptcha/api/siteverify",
       {
         method: "POST",
@@ -34,13 +48,17 @@ app.post("/api/submit", async (req, res) => {
           response: recaptchaToken
         })
       }
-    ).then(r => r.json());
+    );
 
-    if (!verify.success || verify.score < 0.5) {
+    const verifyData = await verifyRes.json();
+
+    if (!verifyData.success || verifyData.score < 0.5) {
       return res.status(403).json({ error: "Bloqueado por seguridad" });
     }
 
-    // Configurar SMTP
+    /* =========================
+       SMTP (Gmail)
+       ========================= */
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),
@@ -72,14 +90,17 @@ ${details || "N/A"}
     });
 
     res.json({ ok: true });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error del servidor" });
+    console.error("ERROR:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
-const PORT = process.env.PORT || 3000;
+/* =========================
+   START SERVER
+   ========================= */
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log("Servidor activo en puerto", PORT);
 });
-
