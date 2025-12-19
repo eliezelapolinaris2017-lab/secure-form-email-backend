@@ -23,7 +23,7 @@ app.post("/api/submit", async (req, res) => {
       email,
       phone,
       service,
-      details,
+      details = "",
       recaptchaToken
     } = req.body;
 
@@ -35,8 +35,12 @@ app.post("/api/submit", async (req, res) => {
       return res.status(400).json({ error: "reCAPTCHA faltante" });
     }
 
+    if (!process.env.RECAPTCHA_SECRET) {
+      return res.status(500).json({ error: "RECAPTCHA_SECRET no configurado en Render" });
+    }
+
     /* =========================
-       Validar reCAPTCHA
+       Validar reCAPTCHA v3
        ========================= */
     const verifyRes = await fetch(
       "https://www.google.com/recaptcha/api/siteverify",
@@ -52,22 +56,29 @@ app.post("/api/submit", async (req, res) => {
 
     const verifyData = await verifyRes.json();
 
-    if (!verifyData.success || verifyData.score < 0.5) {
-      return res.status(403).json({ error: "Bloqueado por seguridad" });
+    if (!verifyData.success || (typeof verifyData.score === "number" && verifyData.score < 0.5)) {
+      return res.status(403).json({ error: "Bloqueado por seguridad (reCAPTCHA)" });
     }
 
     /* =========================
-       SMTP (Gmail)
+       SMTP GMAIL (Render)
+       - Config fija para evitar timeouts
        ========================= */
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: process.env.SMTP_SECURE === "true",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
-      }
+      },
+      connectionTimeout: 20000,
+      greetingTimeout: 20000,
+      socketTimeout: 20000
     });
+
+    const fromEmail = process.env.FROM_EMAIL || `"Oasis Form" <${process.env.SMTP_USER}>`;
+    const toEmail = process.env.TO_EMAIL || process.env.SMTP_USER;
 
     const message = `
 NUEVO CUESTIONARIO RECIBIDO
@@ -82,18 +93,18 @@ ${details || "N/A"}
 `;
 
     await transporter.sendMail({
-      from: process.env.FROM_EMAIL,
-      to: process.env.TO_EMAIL,
+      from: fromEmail,
+      to: toEmail,
       subject: `Nuevo formulario – ${name}`,
       text: message,
       replyTo: email
     });
 
-    res.json({ ok: true });
+    return res.json({ ok: true });
 
   } catch (err) {
     console.error("ERROR:", err);
-    res.status(500).json({ error: "Error interno del servidor" });
+    return res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
