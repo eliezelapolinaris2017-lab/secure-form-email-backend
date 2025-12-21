@@ -1,6 +1,19 @@
 import express from "express";
+import cors from "cors";
 
 const app = express();
+
+/* =========================
+   CORS (LA CLAVE DEL PROBLEMA)
+   ========================= */
+app.use(
+  cors({
+    origin: "*", // luego puedes restringirlo
+    methods: ["POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
 app.use(express.json());
 
 app.post("/api/submit", async (req, res) => {
@@ -29,13 +42,13 @@ app.post("/api/submit", async (req, res) => {
     });
 
     if (!response.ok) {
-      const err = await response.text();
-      throw new Error(err);
+      const text = await response.text();
+      throw new Error(text);
     }
 
     res.json({ ok: true });
-  } catch (error) {
-    console.error("ERROR:", error.message);
+  } catch (err) {
+    console.error("ERROR:", err.message);
     res.status(500).json({ error: "Error enviando formulario" });
   }
 });
