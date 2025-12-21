@@ -1,0 +1,23 @@
+{
+  "oasis": {
+    "name": "Oasis Services",
+    "tag": "Solicitud de servicio",
+    "logo": "./assets/logos/oasis.png",
+    "accent": "#38bdf8",
+    "accent2": "#22c55e"
+  },
+  "nexus": {
+    "name": "Nexus",
+    "tag": "Soporte & tickets",
+    "logo": "./assets/logos/nexus.png",
+    "accent": "#C7A24B",
+    "accent2": "#FFD991"
+  },
+  "cynthias": {
+    "name": "Cynthia’s Salón",
+    "tag": "Citas y servicios",
+    "logo": "./assets/logos/cynthias.png",
+    "accent": "#f472b6",
+    "accent2": "#a78bfa"
+  }
+}
