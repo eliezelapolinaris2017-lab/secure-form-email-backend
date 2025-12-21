@@ -1,0 +1,21 @@
+[
+  { "key":"nombre", "label":"Nombre", "type":"text", "required":true, "span":1 },
+  { "key":"email", "label":"Email", "type":"email", "required":true, "span":1 },
+  { "key":"telefono", "label":"Teléfono", "type":"tel", "required":true, "span":1 },
+
+  {
+    "key":"servicio",
+    "label":"Servicio",
+    "type":"select",
+    "required":true,
+    "span":1,
+    "options":[
+      "Diagnóstico / Reparación",
+      "Instalación",
+      "Mantenimiento",
+      "Cotización"
+    ]
+  },
+
+  { "key":"detalles", "label":"Detalles / Dirección / Notas", "type":"textarea", "required":false, "span":2 }
+]
