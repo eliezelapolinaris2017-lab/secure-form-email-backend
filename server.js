@@ -1,11 +1,9 @@
 import express from "express";
 import cors from "cors";
-import "dotenv/config";
 import { Resend } from "resend";
 
 const app = express();
 
-// CORS: permite tu GitHub Pages (y localhost por si acaso)
 const allowed = [
   "https://eliezelapolinaris2017-lab.github.io",
   "http://localhost:5500",
@@ -15,7 +13,6 @@ const allowed = [
 app.use(
   cors({
     origin: (origin, cb) => {
-      // Permite llamadas sin origin (ej: health checks)
       if (!origin) return cb(null, true);
       if (allowed.includes(origin)) return cb(null, true);
       return cb(new Error(`CORS bloqueado para: ${origin}`), false);
@@ -26,14 +23,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Health check para Render
 app.get("/", (req, res) => res.send("OK - secure-form-email-backend"));
 
 app.post("/api/submit", async (req, res) => {
   try {
-    // 👇 ESTO CUADRA 1:1 con tu HTML
     const { name, email, phone, service, details } = req.body;
 
     if (!name || !email || !phone || !service) {
@@ -43,8 +36,19 @@ app.post("/api/submit", async (req, res) => {
       });
     }
 
-    const from =
-      process.env.FROM_EMAIL || "Formulario Web <onboarding@resend.dev>";
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
+    const TO_EMAIL = process.env.TO_EMAIL;
+
+    if (!RESEND_API_KEY) {
+      return res.status(500).json({ ok: false, error: "RESEND_API_KEY falta en Render" });
+    }
+    if (!TO_EMAIL) {
+      return res.status(500).json({ ok: false, error: "TO_EMAIL falta en Render" });
+    }
+
+    const resend = new Resend(RESEND_API_KEY);
+
+    const from = process.env.FROM_EMAIL || "Formulario Web <onboarding@resend.dev>";
 
     const html = `
       <h2>Nuevo formulario</h2>
@@ -57,10 +61,10 @@ app.post("/api/submit", async (req, res) => {
 
     const result = await resend.emails.send({
       from,
-      to: [process.env.TO_EMAIL],
+      to: [TO_EMAIL],
       subject: `Nuevo formulario: ${service}`,
       html,
-      replyTo: email, // para que le des "Reply" y responda al cliente
+      replyTo: email,
     });
 
     return res.json({ ok: true, result });
@@ -70,13 +74,11 @@ app.post("/api/submit", async (req, res) => {
   }
 });
 
-// Render usa PORT
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor activo en puerto ${PORT}`);
 });
 
-// helper anti-inyección HTML en emails
 function escapeHtml(str) {
   return String(str)
     .replaceAll("&", "&amp;")
