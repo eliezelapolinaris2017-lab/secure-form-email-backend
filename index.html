@@ -11,11 +11,10 @@
       --card:#ffffff;
       --text:#111827;
       --muted:#6b7280;
-      --border:#e5e7eb;
-      --shadow:0 10px 28px rgba(0,0,0,.08);
-      --btn:#1f6f8b;        /* parecido al azul del ejemplo */
-      --btn-hover:#195d74;
-      --radius:12px;
+      --line:#e5e7eb;
+      --btn:#1f6f8b;
+      --btn2:#17556a;
+      --radius:14px;
     }
 
     body{
@@ -25,112 +24,119 @@
       color:var(--text);
     }
 
-    .wrap{max-width:520px;margin:24px auto;padding:16px}
+    .wrap{
+      max-width:520px;
+      margin:18px auto;
+      padding:14px;
+    }
+
     .card{
       background:var(--card);
       border-radius:var(--radius);
-      padding:22px 22px 18px;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(0,0,0,.04);
+      padding:18px 18px 16px;
+      box-shadow:0 10px 28px rgba(0,0,0,.10);
+      border:1px solid rgba(17,24,39,.06);
     }
 
     .brand{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:10px;
-      margin-bottom:10px;
+      text-align:center;
+      margin:4px 0 12px;
     }
 
-    .logo{
-      width:120px;height:54px;
-      display:flex;align-items:center;justify-content:center;
-      color:#111827;
-      font-weight:800;
-      letter-spacing:.5px;
-      border-radius:10px;
-      background:#fff;
+    .brand .logo{
+      font-weight:900;
+      font-size:22px;
+      letter-spacing:.3px;
+      margin:0;
+    }
+    .brand .sub{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
     }
 
-    .title{
-      text-align:left;
-      font-size:20px;
-      font-weight:500;
-      margin:6px 0 16px;
-      color:#374151;
+    .divider{
+      height:1px;
+      background:var(--line);
+      margin:14px 0 8px;
     }
 
     label{
       display:block;
+      margin-top:14px;
       font-weight:700;
       font-size:13px;
-      margin:14px 0 6px;
-      color:#111827;
-    }
-
-    .opt{
-      font-weight:700;
-      font-size:11px;
-      color:#9ca3af;
-      margin-left:6px;
+      color:#1f2937;
     }
 
     input, select, textarea{
       width:100%;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:10px;
+      margin-top:7px;
+      padding:12px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
       font-size:14px;
       outline:none;
       background:#fff;
+      box-sizing:border-box;
     }
 
-    textarea{min-height:110px;resize:vertical}
+    textarea{ min-height:110px; resize:vertical; }
 
-    .help{
-      margin:10px 0 2px;
-      font-size:13px;
-      color:#374151;
-      line-height:1.35;
-      white-space:pre-line;
-    }
-
-    .note{
-      margin-top:12px;
-      font-size:13px;
-      color:#111827;
+    .hint{
+      margin-top:10px;
+      padding:12px 12px;
+      border:1px dashed #d1d5db;
+      border-radius:12px;
+      background:#fafafa;
+      color:#4b5563;
+      font-size:12.8px;
       line-height:1.35;
     }
-    .note b{display:block;margin-bottom:6px}
+
+    .optional{
+      font-weight:600;
+      color:#9ca3af;
+      font-size:11px;
+      margin-left:6px;
+    }
 
     button{
-      margin-top:14px;
+      margin-top:16px;
       width:100%;
-      padding:12px;
-      background:var(--btn);
+      padding:12px 14px;
+      background:linear-gradient(180deg,var(--btn),var(--btn2));
       color:#fff;
       border:none;
-      border-radius:10px;
-      font-weight:800;
+      border-radius:12px;
+      font-weight:900;
       cursor:pointer;
-      transition:.15s ease;
+      letter-spacing:.2px;
     }
-    button:hover{background:var(--btn-hover)}
-    button:disabled{opacity:.65;cursor:not-allowed}
+    button:disabled{opacity:.65; cursor:not-allowed;}
 
-    .msg{margin-top:10px;font-size:13px}
-    .ok{color:#0a7b34;font-weight:800}
-    .err{color:#b42318;font-weight:800}
+    .msg{ margin-top:10px; font-size:13px; }
+    .ok{ color:#0a7b34; font-weight:900; }
+    .err{ color:#b42318; font-weight:900; }
+
+    .note{
+      margin-top:14px;
+      color:#374151;
+      font-size:12.8px;
+      line-height:1.35;
+    }
+    .note b{font-weight:900;}
 
     .legal{
-      margin-top:14px;
+      margin-top:12px;
       font-size:11.5px;
-      color:var(--muted);
-      text-align:center;
+      color:#6b7280;
+      line-height:1.35;
     }
   </style>
 
-  <!-- CONFIG (NO TOCAR si ya te funciona) -->
+  <!-- CONFIG (NO TOCAR si ya funciona) -->
   <script>
     const SITE_KEY = "6LdB4jAsAAAAALaPzH7IBial1E3b5I4PG77-P15n";
     const BACKEND_URL = "https://secure-form-email-backend.onrender.com";
@@ -145,62 +151,60 @@
     <div class="card">
 
       <div class="brand">
-        <!-- Logo “tipo firma” simple (sin assets). Si luego quieres imagen real, lo cambiamos a <img>. -->
-        <div class="logo">Puerto Rico Dresses</div>
+        <h1 class="logo">Puerto Rico Dresses</h1>
+        <p class="sub">Formulario de solicitud. Complete los encasillados para recibir una respuesta por email.</p>
       </div>
 
-      <div class="title">Puerto Rico Dresses Experience.</div>
+      <div class="divider"></div>
 
-      <form id="form">
+      <form id="form" autocomplete="on">
         <label for="name">Name</label>
-        <input id="name" name="name" required>
+        <input id="name" name="name" required />
 
         <label for="email">Email Address</label>
-        <input id="email" name="email" type="email" required>
+        <input id="email" name="email" type="email" required />
 
         <label for="phone">Phone Number</label>
-        <input id="phone" name="phone" required>
+        <input id="phone" name="phone" required />
 
         <label for="service">Servicio que usted desea</label>
         <select id="service" name="service" required>
           <option value="">— Select —</option>
-          <option>Servicio 1</option>
-          <option>Servicio 2</option>
-          <option>Servicio 3</option>
+          <option value="Bodas/Quinceañeros">Bodas/Quinceañeros</option>
+          <option value="Underwater Photography">Underwater Photography</option>
+          <option value="Sesión de Parejas y Modelos">Sesión de Parejas y Modelos</option>
+          <option value="Otro">Otro</option>
         </select>
 
-        <div class="help">
-Escriba en el encasillado de trabajo cualquiera de las siguientes:
-
-Para Bodas/Quinceañeros mencione donde sera la recepción.
-Para Underwater Photography escriba Piscina o Manantial.
-Para sesión de Parejas y Modelos mencione lugar deseado.
-De no tener alguno escriba n/a.
+        <!-- IMPORTANTE: esto SOLO es texto visible, NO se envía por email -->
+        <div class="hint">
+          Escriba en el encasillado de abajo cualquiera de las siguientes:<br><br>
+          Para Bodas/Quinceañeros mencione donde sera la recepción.<br>
+          Para Underwater Photography escriba Piscina o Manantial.<br>
+          Para sesión de Parejas y Modelos mencione lugar deseado.<br>
+          De no tener alguno escriba n/a.
         </div>
 
-        <label for="actividad">¿Dónde será su actividad? <span class="opt">(OPTIONAL)</span></label>
+        <label for="actividad">¿Dónde será su actividad?<span class="optional">(OPCIONAL)</span></label>
         <textarea id="actividad" name="actividad"></textarea>
 
-        <label for="ciudad">Ciudad del Evento <span class="opt">(OPTIONAL)</span></label>
-        <input id="ciudad" name="ciudad">
+        <label for="ciudad">Ciudad del Evento<span class="optional">(OPCIONAL)</span></label>
+        <input id="ciudad" name="ciudad" />
 
-        <label for="dia">Dia de su evento <span class="opt">(OPTIONAL)</span></label>
-        <input id="dia" name="dia" placeholder="" />
+        <label for="dia">Día de su evento<span class="optional">(OPCIONAL)</span></label>
+        <input id="dia" name="dia" type="date" />
 
-        <label for="hora">Hora del Evento <span class="opt">(OPTIONAL)</span></label>
-        <input id="hora" name="hora" placeholder="" />
+        <label for="hora">Hora del Evento<span class="optional">(OPCIONAL)</span></label>
+        <input id="hora" name="hora" type="time" />
 
-        <label for="coordinador">¿Tienes Coordinador de eventos? ¿Cuál es su nombre? <span class="opt">(OPTIONAL)</span></label>
-        <input id="coordinador" name="coordinador">
+        <label for="coordinador">¿Tienes Coordinador de eventos? ¿Cuál es su nombre?<span class="optional">(OPCIONAL)</span></label>
+        <input id="coordinador" name="coordinador" />
 
         <div class="note">
-          <b>Nota*</b>
+          <b>Nota*</b><br>
           Fecha sujetas a disponibilidad.<br>
-          Usted recibirá un correo electrónico con su cotización inmediatamente presione SUBMIT.
+          Usted recibirá un correo electrónico con su cotización inmediatamente presione <b>SUBMIT</b>.
         </div>
-
-        <!-- Este campo es el que tu backend ya entiende. Lo llenamos automático en JS. -->
-        <textarea name="details" id="details" style="display:none"></textarea>
 
         <button type="submit" id="btn">Submit</button>
         <div class="msg" id="msg"></div>
@@ -209,6 +213,7 @@ De no tener alguno escriba n/a.
           This form is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
         </div>
       </form>
+
     </div>
   </div>
 
@@ -216,25 +221,36 @@ De no tener alguno escriba n/a.
     const form = document.getElementById("form");
     const btn = document.getElementById("btn");
     const msg = document.getElementById("msg");
-    const detailsField = document.getElementById("details");
 
+    function formatDate(val){
+      if(!val) return "n/a";
+      try{
+        const [y,m,d] = val.split("-");
+        if(!y || !m || !d) return val;
+        return `${m}/${d}/${y}`;
+      }catch(_){ return val; }
+    }
+
+    function formatTime(val){
+      if(!val) return "n/a";
+      try{
+        const [hh,mm] = val.split(":");
+        if(hh === undefined || mm === undefined) return val;
+        let h = parseInt(hh,10);
+        const ampm = h >= 12 ? "pm" : "am";
+        h = h % 12; if(h === 0) h = 12;
+        return `${h}:${mm} ${ampm}`;
+      }catch(_){ return val; }
+    }
+
+    // ✅ SOLO encasillados: nada del texto de instrucciones se manda por email
     function buildDetails(data){
-      // Empaquetamos todo en un solo "details" para NO tocar backend.
-      const lines = [
-        `Servicio: ${data.service || ""}`,
-        ``,
-        `Instrucciones (referencia):`,
-        `- Para Bodas/Quinceañeros mencione donde sera la recepción.`,
-        `- Para Underwater Photography escriba Piscina o Manantial.`,
-        `- Para sesión de Parejas y Modelos mencione lugar deseado.`,
-        `- De no tener alguno escriba n/a.`,
-        ``,
-        `¿Dónde será su actividad?: ${data.actividad || "n/a"}`,
-        `Ciudad del Evento: ${data.ciudad || "n/a"}`,
-        `Día de su evento: ${data.dia || "n/a"}`,
-        `Hora del Evento: ${data.hora || "n/a"}`,
-        `Coordinador: ${data.coordinador || "n/a"}`
-      ];
+      const lines = [];
+      lines.push(`¿Dónde será su actividad?: ${data.actividad?.trim() ? data.actividad.trim() : "n/a"}`);
+      lines.push(`Ciudad del Evento: ${data.ciudad?.trim() ? data.ciudad.trim() : "n/a"}`);
+      lines.push(`Día de su evento: ${formatDate(data.dia)}`);
+      lines.push(`Hora del Evento: ${formatTime(data.hora)}`);
+      lines.push(`Coordinador: ${data.coordinador?.trim() ? data.coordinador.trim() : "n/a"}`);
       return lines.join("\n");
     }
 
@@ -245,7 +261,6 @@ De no tener alguno escriba n/a.
       msg.textContent = "";
 
       const data = Object.fromEntries(new FormData(form).entries());
-      detailsField.value = buildDetails(data);
 
       try {
         const token = await grecaptcha.execute(SITE_KEY, { action: "submit_form" });
@@ -258,13 +273,13 @@ De no tener alguno escriba n/a.
             email: data.email,
             phone: data.phone,
             service: data.service,
-            details: detailsField.value,
+            details: buildDetails(data),
             recaptchaToken: token
           })
         });
 
-        const out = await res.json();
-        if (!res.ok) throw new Error(out.error || "Error");
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(out.error || "Server error");
 
         msg.innerHTML = `<span class="ok">Formulario enviado correctamente ✅</span>`;
         form.reset();
