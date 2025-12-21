@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - Preguntas</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg"></div>
+
+  <main class="wrap">
+    <header class="brand">
+      <div class="brand-left">
+        <div class="brand-text">
+          <div class="brand-name">Administrador</div>
+          <div class="brand-tag">Editar preguntas (modo rápido)</div>
+        </div>
+      </div>
+      <div class="brand-right">
+        <a class="admin-link" href="./index.html">Volver al formulario</a>
+      </div>
+    </header>
+
+    <section class="card">
+      <h1 class="title">questions.json (editable)</h1>
+      <p class="sub">Edita aquí, guarda y se aplica al instante en este navegador.</p>
+
+      <textarea id="editor" class="textarea" style="width:100%; min-height:360px;"></textarea>
+
+      <div class="actions">
+        <button id="save" class="btn" type="button">Guardar (local)</button>
+        <button id="reset" class="btn" type="button" style="filter:saturate(.7)">Reset (volver al repo)</button>
+        <span id="status" class="status"></span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const editor = document.getElementById("editor");
+    const status = document.getElementById("status");
+    const saveBtn = document.getElementById("save");
+    const resetBtn = document.getElementById("reset");
+
+    init();
+
+    async function init(){
+      const override = localStorage.getItem("questions_override");
+      if(override){
+        editor.value = override;
+      } else {
+        const r = await fetch("./questions.json", { cache:"no-store" });
+        editor.value = await r.text();
+      }
+    }
+
+    saveBtn.onclick = () => {
+      try{
+        JSON.parse(editor.value);
+        localStorage.setItem("questions_override", editor.value);
+        status.textContent = "✅ Guardado. Ve al formulario y refresca.";
+      } catch(e){
+        status.textContent = "❌ JSON inválido. Revisa comas/llaves.";
+      }
+    };
+
+    resetBtn.onclick = () => {
+      localStorage.removeItem("questions_override");
+      status.textContent = "♻️ Reset. Refresca esta página.";
+    };
+  </script>
+</body>
+</html>
